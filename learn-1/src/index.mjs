@@ -39,8 +39,9 @@ app.post("/api/users",(req,res)=>{
 
 
 app.get('/api/users/:id',(req, res)=>{
-    const { params:{ id }}=req
-    const user=users.find((u)=>u.id===Number(id))
+    const { params:{ id } }=req
+    const idUser=parseInt(id)
+    const user=users.find((u)=>u.id===idUser)
     user?
     res.send(user)
     :
@@ -51,12 +52,30 @@ app.get('/api/users/:id',(req, res)=>{
 })
 app.put('/api/users/:id',(req,res)=>{
     const {  body, params:{ id } }=req
-    const userIndex=users.findIndex((u)=>u.id===Number(id))
+    const userIndex=users.findIndex((u)=>u.id===parseInt(id))
     if(userIndex!==-1){
         users[userIndex]={ id:Number(id), ...body}
     }else{
         res.status(408).send( { message:"Invalid Id User" } )
     }
+})
+
+app.patch('/api/users/:id',(req,res)=>{
+    const { body, params:{ id } }=req
+    if(id){
+        const user=users.find((u)=>u.id===parseInt(id))
+        if(user){
+            user.bio=body.bio
+            res.send(user)
+        }else{
+            res.status(410).send({ message:"Invalid Id user" })
+        }
+    }
+})
+
+app.delete('/api/users/:id',(req,res)=>{
+    const { params:{ id } }=req
+    res.send(users.filter((u)=>u.id!==parseInt(id)))
 })
 
 
