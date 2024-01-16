@@ -39,12 +39,27 @@ app.post("/api/users",(req,res)=>{
 
 
 app.get('/api/users/:id',(req, res)=>{
-    const user=users.find((u)=>u.id===Number(req.params.id))
-    res.status(user?200:400).send(user || 
+    const { params:{ id }}=req
+    const user=users.find((u)=>u.id===Number(id))
+    user?
+    res.send(user)
+    :
+    res.status(400).send( 
         {
             message:"Bad Request, Invalid Id"
         })
 })
+app.put('/api/users/:id',(req,res)=>{
+    const {  body, params:{ id } }=req
+    const userIndex=users.findIndex((u)=>u.id===Number(id))
+    if(userIndex!==-1){
+        users[userIndex]={ id:Number(id), ...body}
+    }else{
+        res.status(408).send( { message:"Invalid Id User" } )
+    }
+})
+
+
 app.get("/api/users/:idUser/books",(req, res)=>{
     const { params:{ idUser} }=req;
     if(idUser){
@@ -53,7 +68,20 @@ app.get("/api/users/:idUser/books",(req, res)=>{
             message:"invalid Id user"
         })
     }
-
+})
+app.post("/api/users/:idUser/books",(req, res)=>{
+    const { params:{ idUser} }=req;
+    if(idUser){
+        const user=users.find((u)=>u.id===Number(idUser))
+        if(user){
+            user.books.push(req.body)
+            res.send(user)
+        }else{
+            res.send({ message:"Missing Id User" })
+        }
+    }else{
+        res.send({ message:"invalid Id!" })
+    }
 })
 app.get("/api/users/:idUser/books/:idBooks",(req,res)=>{
     const { params:{ idUser, idBooks } }=req
