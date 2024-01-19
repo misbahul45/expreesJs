@@ -1,10 +1,47 @@
 import express from 'express'
+import { query, validationResult, body, matchedData, checkSchema } from 'express-validator'
 import { users } from './api/users.mjs'
+import { createValidationuserSchema } from './validator/valiadtionSchema.mjs'
+import cookieParser from "cookie-parser"
+import userRouter from './router/users.mjs'
+import session from "express-session"
+
+
 const app =express()
-app.use(express.json())
 const PORT=process.env.PORT || 3000
 
-app.get('/api/users',(req, res)=>{
+app.use(express.json())
+app.use(cookieParser("hello world"))
+app.use(session({
+    secret:'misbahul software engine',
+    saveUninitialized:false,
+    resave:false,
+    cookie:{
+        maxAge:60000*60,
+    }
+}))
+app.use(userRouter)
+const loggingMiddleware=(req,res,next)=>{
+
+    next();
+}
+
+app.use(loggingMiddleware)
+
+app.get('/', (req, res) => {
+   //res.cookie("hello", "world", { message: "My first Cookie" });
+   //res.cookie("login", "world", { signed:true });
+   req.session.visited=true
+    console.log(req.headers.cookie)//header it is use for get cookie in different router
+
+    return res.send({ message: "hallo" });
+});
+
+app.get('/api/users',
+    query('bio').isString().notEmpty().withMessage("Must be Not Empty").isLength({ min:3,  max:10}).withMessage("Mins length is 3"),
+(req, res)=>{
+    
+    const result=validationResult(req)
     const { query:{ bio } }=req
     if(bio){
         const getUser=users.find((u)=>(u.bio.toLowerCase()).includes(req.query.bio.toLowerCase()))
@@ -19,8 +56,18 @@ app.get('/api/users',(req, res)=>{
     }
 })
 
-app.post("/api/users",(req,res)=>{
-    const { body:{ id, name } }=req;
+app.post("/api/users",
+checkSchema(createValidationuserSchema)
+,(req,res)=>{
+    const result=validationResult(req)
+    //const { body:{ id, name } }=req; //cara 1
+    const { id, name }=matchedData(req) //cara 2 dan lebih efisien
+
+    if(!result.isEmpty()){
+        return res.status(400).send({
+            errors:result.array()
+        })
+    }
     if(id){
         if(name!==""){
             users.push(req.body)
@@ -38,7 +85,9 @@ app.post("/api/users",(req,res)=>{
 })
 
 
-app.get('/api/users/:id',(req, res)=>{
+app.get('/api/users/:id',(req, res, next)=>{    
+    if(!isNaN(Number(req.params.id)))next()
+},(req, res)=>{
     const { params:{ id } }=req
     const idUser=parseInt(id)
     const user=users.find((u)=>u.id===idUser)
@@ -60,6 +109,7 @@ app.put('/api/users/:id',(req,res)=>{
     }
 })
 
+
 app.patch('/api/users/:id',(req,res)=>{
     const { body, params:{ id } }=req
     if(id){
@@ -78,6 +128,9 @@ app.delete('/api/users/:id',(req,res)=>{
     res.send(users.filter((u)=>u.id!==parseInt(id)))
 })
 
+
+
+//get userBooks
 
 app.get("/api/users/:idUser/books",(req, res)=>{
     const { params:{ idUser} }=req;
