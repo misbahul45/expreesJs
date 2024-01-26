@@ -3,6 +3,7 @@ const usersApi = [
         id: 1,
         password:"sarah123",
         username: "Sarah",
+        email:"sarah123@gmail.com",
         bio: "Hello, I'm Sarah! 🌟 Exploring the wonders of life and constantly learning...",
         posts: [
             "Just finished reading an amazing book on neuroscience. The complexity of the human brain never ceases to amaze me! 🧠 #ScienceLover",
@@ -15,6 +16,7 @@ const usersApi = [
         id: 2,
         password:"alex123",
         username: "Alex",
+        email:"alex123@gmail.com",
         bio: "Hey there! I'm Alex, a fitness freak and nature lover. Transforming lives through wellness and positivity...",
         posts: [
             "Early morning run to kickstart the day! 🏃‍♂️ Embrace the sweat, feel the burn. Let's crush those fitness goals together! 💪 #MorningMotivation",
@@ -27,6 +29,7 @@ const usersApi = [
         id:3,
         password:"james123",
         username: "James",
+        email:"james123@gmail.com",
         bio: "Greetings! I'm James, a globetrotter and storyteller. Passionate about discovering diverse cultures and sharing tales from the road...",
         posts: [
             "Lost in the streets of Tokyo – a city that beautifully blends tradition and innovation. Every corner tells a story. 🇯🇵 #TravelDiaries",
@@ -39,6 +42,7 @@ const usersApi = [
         id: 4,
         password:"emma123",
         username: "Emma",
+        email:"emma123@gmail.com",
         bio: "Hi, I'm Emma! A technology enthusiast and coding wizard. Always curious, always coding...",
         posts: [
             "Building a new web app from scratch. Exciting times ahead in the world of web development! 💻 #CodingLife",
@@ -51,6 +55,7 @@ const usersApi = [
         id: 5,
         password:"chris123",
         username: "Chris",
+        email:"chris123@gmail.com",
         bio: "Greetings! I'm Chris, an outdoor adventurer and photography enthusiast. Nature is my playground...",
         posts: [
             "Sunrise hike to the mountain peak. The world looks different from up here. 🌄 #MountainExplorer",
@@ -63,6 +68,7 @@ const usersApi = [
         id: 6,
         password:"olivia123",
         username: "Olivia",
+        email:"olivia123@gmail.com",
         bio: "Hello, I'm Olivia! A bookworm and aspiring writer. Words have the power to create worlds...",
         posts: [
             "Diving into a classic novel today. The beauty of literature is timeless. 📖 #Bookworm",
@@ -75,6 +81,7 @@ const usersApi = [
         id: 7,
         password:"ryan123",
         username: "Ryan",
+        email:"ryan123@gmail.com",
         bio: "Hey, I'm Ryan! A music lover and guitar enthusiast. Strumming through the rhythms of life...",
         posts: [
             "Jamming with friends in the garage. Music is the universal language that connects us all. 🎸 #JamSession",
@@ -87,6 +94,7 @@ const usersApi = [
         id: 8,
         password:"ava123",
         username: "Ava",
+        email:"ava123@gmail.com",
         bio: "Greetings! I'm Ava, a fashionista and style enthusiast. Fashion is my canvas...",
         posts: [
             "Experimenting with a new look today. Fashion is a form of self-expression. 👗 #StyleExplorer",
