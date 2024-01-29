@@ -1,0 +1,12 @@
+import { param, query } from "express-validator"
+export const param_validation=()=>{
+    return[param("id").notEmpty().withMessage("invalid Id").isString().withMessage("invalid Id")]
+}
+
+export const  query_validation=()=>{
+    return [
+        query("title").notEmpty().isString(),
+        query("author").notEmpty().isString(),
+        query("limit").notEmpty().isInt({min:1})
+    ]
+}
