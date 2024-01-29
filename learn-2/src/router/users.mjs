@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { checkSchema, param, validationResult } from "express-validator";
-import { createNewUser, getUserQuery, patchUser } from "./validation/user.mjs";
+import { createNewUser, getUserQuery, checkUserParam, checkUserPut, userAuth } from "../validation/user.mjs";
 import usersApi from "../api/usersApi.mjs";
 import { matchedData } from "express-validator";
 
@@ -24,10 +24,9 @@ userRouter.get("/api/users/:id?",
     checkSchema(getUserQuery),
     (req,res,next)=>{
         const errorResult=validationResult(req)
-        console.log()
         const { bio, limit }=matchedData(req)
         if(errorResult.array().some((err)=>(err.path.includes('bio') && err.value!==undefined ) || (err.path.includes('limit') && err.value!==undefined))){
-            return res.status(400).send({ message:"Invalid credentials" })
+            return res.status(400).send({ message:"invalid credentials" })
         }
         if(!bio && !limit){
             return next()
@@ -67,7 +66,7 @@ userRouter.post("/api/users",
 );
 
 userRouter.patch("/api/users/:id",
-    patchUser(),
+    checkUserParam(),
     (req,res)=>{
        const { body:updateItemUser } =req 
        const updateUsersItem=Object.entries(updateItemUser)
@@ -84,17 +83,101 @@ userRouter.patch("/api/users/:id",
             user[key]=value
         })
        }
-       return res.json({ message:"succefully updated", user })
+       return res.json({ message:"succefully updated", users:usersApi })
+    }
+),
+
+userRouter.put("/api/users/:id",
+    checkUserParam(),
+    checkUserPut(),
+    (req, res)=>{
+        const errorResult=validationResult(req)
+        if(!errorResult.isEmpty()){
+            return res.status(400).send({ error:errorResult.array() })
+        }
+        const userUpdate=matchedData(req)
+        const isUserExist=usersApi.some((u)=>u.id===Number(userUpdate.id))
+        if(!isUserExist){
+            return res.status(400).send( { message:"invalid credentials" } )
+        }
+        usersApi.forEach((user,index)=>{
+            if(user.id===Number(userUpdate.id)){
+                usersApi[index]={
+                    ...userUpdate,
+                    id:Number(userUpdate.id)
+                }
+            }
+        })
+        return res.json({ message:"succefully updated", users:usersApi })
     }
 )
 
+userRouter.delete("/api/users/:id",
+    param('id').notEmpty(),
+    (req, res)=>{
+        const erorResult=validationResult(req)
+        const { id }=matchedData(req)
+        if(id){
+            return res.status(200).send({
+                message:"Succesfully deleted",
+                users:usersApi.filter((user)=>user.id!==Number(id))
+            })
+        }
+        return res.status(400).send({ error:erorResult.array() })
+    }
+)
 
+userRouter.post("/api/auth",
+    userAuth(),
+    (req,res)=>{
+        const errorResult=validationResult(req)
+        const { email, password }=matchedData(req)
+        const user=usersApi.find((user)=>user.email===email && user.password===password)
+        if(errorResult.isEmpty()){
+            if(user){
+                req.session.user=user
+                return res.status(200).send(user)
+            }
+        }
+        res.status(400).send({ message:"bad creadentials" })
+    }
+)
 
+userRouter.get("/api/auth/status",(req, res)=>{
+    req.sessionStore.get(req.sessionID, (err,session)=>{
+        console.log(session)
+    })
+    return req.session.user?
+        res.status(200).send(req.session.user)
+        :
+        res.status(400).send({ message:"not authenticated" })
+})
 
+userRouter.post("/api/cart",(req, res)=>{
+    req.sessionStore.get(req.sessionID, (err,session)=>{
+        console.log(session)
+    })
 
+    if(!req.session.user){
+        return res.sendStatus(400)
+    }
+    const { body:item }=req
+    const { cart }=req.session
+        if(cart){
+            cart.push(item)
+        }else{
+            req.session.cart=[item]
+        }
+    return res.send(item)
 
+})
 
-
-
+userRouter.get("/api/cart",(req,res)=>{
+    if(!req.session.user){
+        return res.sendStatus(400)
+    }
+    const { cart }=req.session
+    return res.send(cart || [])
+})
 
 export default userRouter
