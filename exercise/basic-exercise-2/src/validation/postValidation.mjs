@@ -3,7 +3,7 @@ export const param_validation=()=>{
     return[param("id").notEmpty().withMessage("invalid Id").isString().withMessage("invalid Id")]
 }
 
-export const  query_validation=()=>{
+export const query_validation=()=>{
     return [
         query("title").notEmpty().isString(),
         query("author").notEmpty().isString(),

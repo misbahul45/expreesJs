@@ -20,7 +20,6 @@ passport.deserializeUser((id, done)=>{
 
 export default passport.use(
     new Strategy((username, password, done)=>{
-        console.log(username, password)
         try{
             const findUser=usersApi.find((user)=>user.username===username)
             if(!findUser){

@@ -11,17 +11,13 @@ postsRouter.get(
   async (req, res, next) => {
     try {
       const { id } = matchedData(req);
-
       if (id) {
         const findPost = await Post.find({ _id: id });
-
         if (findPost.length === 0) {
           throw new Error("Post not found");
         }
-
         return res.status(200).send(findPost);
       }
-
       next();
     } catch (err) {
       return res.status(401).send({ error: err.message });
@@ -29,21 +25,17 @@ postsRouter.get(
   },
   query_validation(),
   async (req, res) => {
+    console.log(req.session)
     try {
       const { limit, title, author } = matchedData(req);
-
       const query = {};
-
       if (title) {
         query.title = { $regex: title, $options: "i" }; 
       }
-
       if (author) {
         query.author = { $regex: author, $options: "i" }; 
       }
-
       const posts = await Post.find(query).limit(Number(limit));
-
       return res.status(200).send(posts);
     } catch (err) {
       return res.status(500).send({ msg: err.message });

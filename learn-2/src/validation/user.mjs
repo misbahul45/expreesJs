@@ -1,4 +1,4 @@
-import { check, param } from "express-validator";
+import { check,param } from "express-validator";
 
 export const checkUserParam=()=>{
     return[
@@ -27,12 +27,10 @@ export const createNewUser=()=>{
     return[
         check('username').notEmpty().isString(),
         check('email').isEmail(),
-        check('password', 'The password must be 8+ chars long and contain a number')
-        .not()
-        .isIn(['123', 'password', 'god'])
-        .withMessage('Do not use a common word as the password')
-        .isLength({ min: 8 })
-        .matches(/\d/).matches(/[A-Z]/),
+        check('pasword')
+        .notEmpty()
+        .isLength({ min:8 })
+        .isString()
     ]
 }
 export const checkUserPut=()=>{
@@ -40,7 +38,7 @@ export const checkUserPut=()=>{
         check('username').notEmpty().isString(),
         check('email').isEmail(),
         check('password', 'The password must be 8+ chars long and contain a number')
-        .not()
+        .notEmpty()
         .isIn(['123', 'password', 'god'])
         .withMessage('Do not use a common word as the password')
         .isLength({ min: 8 })
@@ -53,7 +51,8 @@ export const checkUserPut=()=>{
 
 export const userAuth=()=>{
     return[
+        check('username').isString().notEmpty(),
         check('email').notEmpty().isEmail(),
-        check('password').notEmpty()
+        check('password').notEmpty().isString()
     ]
 }

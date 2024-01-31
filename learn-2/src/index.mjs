@@ -5,7 +5,17 @@ import passport from "passport"
 import userRouter from "./router/users.mjs"
 import productRouter from "./router/products.mjs"
 import "./strategies/local-strategy.mjs"
+import mongoose from "mongoose"
+import authRouter from "./router/userAuth.mjs"
+
+
 const app=express()
+
+mongoose.connect("mongodb://localhost:27017/users")
+.then(()=>console.log("connected"))
+.catch(()=>console.log("error conected"))
+
+
 app.use(express.json())
 app.use(cookieParser("helloworld"))
 app.use(session({
@@ -23,6 +33,7 @@ app.use(passport.session())
 
 app.use(userRouter)
 app.use(productRouter)
+app.use(authRouter)
 
 app.get("/",(req, res)=>{
     console.log(req.session)

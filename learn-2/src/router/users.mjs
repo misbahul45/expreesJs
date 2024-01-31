@@ -128,17 +128,13 @@ userRouter.delete("/api/users/:id",
 )
 
 userRouter.post("/api/auth",
-    userAuth(),
     (req,res)=>{
-        const errorResult=validationResult(req)
-        const { email, password }=matchedData(req)
+        const { email, password }=req.body
         const user=usersApi.find((user)=>user.email===email && user.password===password)
-        if(errorResult.isEmpty()){
             if(user){
                 req.session.user=user
                 return res.status(200).send(user)
             }
-        }
         res.status(400).send({ message:"bad creadentials" })
     }
 )

@@ -4,11 +4,11 @@ import { Schema } from "mongoose"
 const postSchema=new Schema({
     title:{
         type:String,
-        require:true
+        required:true
     },
     author:{
         type:String,
-        require:true,
+        required:true,
     },
     body:{
         type:Array,
