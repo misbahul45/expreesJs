@@ -1,28 +1,34 @@
-import React, { useRef, useState } from 'react'
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
 
-const App:React.FC = () => {
-  const titleRef=useRef<HTMLInputElement>(null)
-  const [file, setFile]=useState<File | null>(null)
+function App() {
+  const [count, setCount] = useState(0)
 
-  const handleSubmit=async(e:React.FormEvent)=>{
-    e.preventDefault()
-    const formData=new FormData()
-    formData.append("title",titleRef.current?.value ?? "")
-    formData.append("file", file ?? "")
-    console.log(formData)   
-  }
-  
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center bg-slate-900">
-        <h1 className="text-4xl mb-4 text-slate-700 font-semibold">Upload Files React</h1>
-        <form onSubmit={handleSubmit} className="w-full max-w-lg flex flex-col gap-7 border px-4 py-5 rounded-md">
-          <input ref={titleRef} type="text" placeholder="Title.." className="pl-3 pt-2 pb-1.5 rounded-lg outline-none bg-transparent ring-2 ring-slate-500 text-slate-200 focus:ring-red-600"  />
-          <input
-          onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-          type="file" className="text-slate-100" />
-          <button type='submit' className="text-slate-100 bg-blue-600 hover:bg-blue-800 w-32 py-1 rounded-md">Submit</button>
-        </form>
-    </div>
+    <>
+      <div>
+        <a href="https://vitejs.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
   )
 }
 
