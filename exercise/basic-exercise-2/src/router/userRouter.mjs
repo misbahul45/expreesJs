@@ -37,7 +37,6 @@ userRouter.post("/api/auth/login", passport.authenticate("local"), (req, res) =>
 });
 
 userRouter.get("/api/auth/status",(req, res)=>{
-    console.log(req.session)
     return req.session?res.status(200).send(req.session.passport):res.sendStatus(401)
 })
 

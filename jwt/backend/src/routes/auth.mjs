@@ -19,11 +19,10 @@ auth.post("/auth/sign-up",
         }
         const data=matchedData(req)
         try{
-            const existingUser = await Signup.findOne({ email: userData.email });
+            const existingUser =await Signup.findOne({email:data.email})
            if (existingUser) {
               return res.status(400).json({ message: "Email already exists" });
-            }
-            
+            }      
             const newUser=new Signup(data)
             newUser.save()
             if(!newUser){
@@ -34,7 +33,7 @@ auth.post("/auth/sign-up",
                 message: "User created successfully",
             })
         }catch(e){
-            return res.status(500).send({ message:e.message })
+            return res.status(400).send({ message:e.message })
         }
     }
 )
