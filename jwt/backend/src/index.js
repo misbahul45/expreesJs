@@ -6,21 +6,25 @@ import cookieRouter from "./routes/cookies.mjs"
 import cookieParser from "cookie-parser"
 
 const app=express()
-app.use(cors())
+app.use(cors({
+    credentials:true,
+    origin:"http://localhost:5173"
+}));
 app.use(cookieParser())
-
-mongoose.connect("mongodb://localhost:27017/Jwt")
-.then(()=>console.log("conected db")).catch((e)=>console.log("err", e))
 app.use(express.json())
 
-app.get("/",(_, res)=>{
-    return res.redirect("/auth/sign-in")
-})
-
-//router
 app.use(auth)
 app.use(cookieRouter)
+mongoose.connect("mongodb://localhost:27017/Jwt")
+.then(()=>console.log("conected db")).catch((e)=>console.log("err", e))
 
-app.listen(3000, ()=>{
+app.get("/", (_, res) => {
+    return res.redirect("/auth/sign-in");
+});
+
+
+//router
+
+app.listen(4000, ()=>{
     console.log("Running")
 })
