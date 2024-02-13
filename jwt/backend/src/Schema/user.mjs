@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { hashPassword } from "../util/hasing.mjs";
-const signup=new Schema({
+import { comparePassword, hashPassword } from "../util/hasing.mjs";
+const userSchema=new Schema({
     username:{
         type:String,
         required:true
@@ -17,10 +17,23 @@ const signup=new Schema({
     },
 })
 
-signup.pre('save', 
+const signinSchema=new Schema({
+    email:{
+        type:String,
+        required:true,
+        unique:true,
+    },
+    password:{
+        type:String,
+        required:true,
+        minLength:8
+    },
+})
+
+userSchema.pre('save', 
     async function(next){
         try {
-            this.password = await hashPassword(this.password);
+            this.password = hashPassword(this.password);
             next();
         } catch (error) {
             next(error);
@@ -28,5 +41,17 @@ signup.pre('save',
     }
 )
 
-const Signup=model("Accounts",signup)
-export default Signup
+userSchema.statics.login=async function(email, password){
+    const user=await this.findOne({ email })
+    if(user){
+        const auth=comparePassword(password,user.password )
+        if(auth){
+            return user
+        }
+        return { message:"incorrect password" }
+    }
+    return{ message:"incorrect email" }
+}
+const User=model("Accounts", userSchema)
+
+export default User

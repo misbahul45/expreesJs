@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { createToken, maxAge } from "../util/token.mjs";
+import requireAuth from "../util/authMiddleware.mjs";
 
 const cookieRouter=Router()
 
@@ -12,7 +13,9 @@ cookieRouter.get('/set-cookies',(req,res)=>{
     return res.send({ msg:'You got the cookie' })
 })
 
-cookieRouter.get('/read-cookies',(req,res)=>{
+cookieRouter.get('/read-cookies',
+requireAuth,
+(req,res)=>{
     const cookies=req.cookies;
     res.json(cookies) 
 })

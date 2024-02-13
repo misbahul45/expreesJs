@@ -1,8 +1,8 @@
 import  React, { useReducer, useState } from 'react'
 import { IoEyeOffSharp, IoEyeSharp } from 'react-icons/io5'
-import axios, { isAxiosError } from "axios"
+import axios from "axios"
 import { Input } from '@material-tailwind/react'
-
+import { motion } from  "framer-motion"
 interface Props{
   type?:string,
 }
@@ -10,12 +10,12 @@ interface FormReducer {
     type: string | undefined;
     payload: string;
   }
-  
   interface State {
     username: string;
     password: string;
     email: string;
   }
+
   const formReducer=(state:State, action:FormReducer)=>{
     switch (action.type) {
       case "username":
@@ -29,37 +29,36 @@ interface FormReducer {
     }
   }
 const Form = ({ type }:Props) => {
-    const [state, dispatch]=useReducer(formReducer, { username:"", password:"", email:"" })
-    const [showPassword, setShowPassword]=useState<boolean>(false)
-    const handleInput=(e:React.ChangeEvent<HTMLInputElement>)=>{
-      const  { name, value }=e.target
-      dispatch({ type:name, payload:value })
+  const [state, dispatch]=useReducer(formReducer, { username:"", password:"", email:"" })
+  const [showPassword, setShowPassword]=useState<boolean>(false)
+  const handleInput=(e:React.ChangeEvent<HTMLInputElement>)=>{
+    const  { name, value }=e.target
+    dispatch({ type:name, payload:value })
   }
-    const handleSignUp=async(e:React.FormEvent<HTMLFormElement>)=>{
-        e.preventDefault();
-        try{
-          const res= await axios.post("http://localhost:4000/auth/signup",{
-            ...state
-          },{
-            withCredentials:true,
-          })
-          if(res.status<400){
-            dispatch({type:'username',payload:""})
-            dispatch({type:'password',payload:""})
-            dispatch({type:'email',payload:""})
-          }
-        }catch(error:unknown){
-          if (isAxiosError(error)) {
-            console.error('An error occurred', error.message);
-          } else {
-            console.error('An unknown error occurred:', error);
-          }          
-        }
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:4000/auth/signup", {
+        ...state
+      }, {
+        withCredentials: true,
+      });
+  
+      if (res.status < 400) {
+        dispatch({ type: 'username', payload: '' });
+        dispatch({ type: 'password', payload: '' });
+        dispatch({ type: 'email', payload: '' });
+        console.log(res.data);
+      }
+  
+    } catch (error) {
+        console.error('Error setting up the request:', error);
     }
+  };
+  
 
     const handleSignIn=async(e:React.FormEvent<HTMLFormElement>)=>{
       e.preventDefault();
-      try{
         const res= await axios.post("http://localhost:4000/auth/signin",{
           email:state.email,
           password:state.password
@@ -71,19 +70,16 @@ const Form = ({ type }:Props) => {
           dispatch({type:'password',payload:""})
           dispatch({type:'email',payload:""})
         }
-      }catch(error:unknown){
-        if (isAxiosError(error)) {
-          console.error('An error occurred', error.message);
-        } else {
-          console.error('An unknown error occurred:', error);
-        }          
-      }
   }
 
   return (
     <div className="w-full max-w-md flex flex-col items-center">
         <h1 className="text-4xl font-semibold font-sans">{type?"Sign Up":"Sign In"}</h1>
-        <form onSubmit={type==="signup"?handleSignUp:handleSignIn} className="w-full max-w-sm mt-8 flex flex-col gap-4 px-7 py-5 rounded-lg border-2 border-accent">
+        <motion.form
+        initial={{opacity:0}}
+        animate={{opacity:1}}
+        transition={{duration:2}}
+        onSubmit={type==="signup"?handleSignUp:handleSignIn} className="w-full max-w-sm mt-8 flex flex-col gap-4 px-7 py-5 rounded-lg border-2 border-accent">
             {(type==='signup')&&(
                 <Input variant="standard" color="white" crossOrigin={'Username'} type="text" name="username" minLength={3} value={state.username} onChange={handleInput} required label="Username"/>
             )}
@@ -96,7 +92,7 @@ const Form = ({ type }:Props) => {
                 <span className={`${state.password.length<8 && state.password.length>0?"block":"hidden"} text-xs text-red-500 mt-2`}>password must be at least 8 characters</span>
             </div>
             <button type="submit" className="w-32 py-2 btn shadow shadow-white/10 font-semibold text-lg">Sign Up</button>
-        </form>
+        </motion.form>
     </div>
   )
 }

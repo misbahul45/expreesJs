@@ -43,14 +43,38 @@ const Animate = () => {
         }
      </div>
      <div className="hidden absolute h-full w-full lg:flex flex-col lg:max-w-xs top-0 right-0 rotate-180">
-        <div className="w-[70%] bg-blue-gray-800 h-[25%] rounded-r-md shadow-yellow-500 shadow-2xl" />
-        <div className="w-[80%] bg-blue-gray-700 h-[35%] rounded-r-lg shadow-orange-500 shadow-2xl" />
-        <div className="w-full bg-blue-gray-600 flex-1 rounded-r-xl shadow-red-500 shadow-2xl" />
+        <motion.div 
+        initial={{x:-100, opacity:0, scale:0}}
+        animate={{x:0, opacity:1, scale:1}}
+        transition={{duration:1}}
+        className="w-[70%] h-[25%] rounded-r-md shadow-yellow-500 shadow-2xl" />
+        <motion.div
+        initial={{x:-100, opacity:0, scale:0}}
+        animate={{x:0, opacity:1, scale:1}}
+        transition={{duration:0.5}}
+        className="w-[80%] h-[35%] rounded-r-lg shadow-orange-500 shadow-2xl" />
+        <motion.div
+        initial={{x:-100, opacity:0, scale:0}}
+        animate={{x:0, opacity:1, scale:1}}
+        transition={{duration:0.4}}
+        className="w-full flex-1 rounded-r-xl shadow-red-500 shadow-2xl" />
      </div>
      <div className="hidden absolute h-full w-full lg:flex flex-col lg:max-w-xs top-0 left-0">
-        <div className="w-full bg-blue-gray-600 flex-1 rounded-r-xl shadow-red-500 shadow-2xl" />
-        <div className="w-[80%] bg-blue-gray-700 h-[35%] rounded-r-lg shadow-orange-500 shadow-2xl" />
-        <div className="w-[70%] bg-blue-gray-800 h-[25%] rounded-r-md shadow-yellow-500 shadow-2xl" />
+        <motion.div
+        initial={{x:-100, opacity:0, scale:0}}
+        animate={{x:0, opacity:1, scale:1}}
+        transition={{duration:0.4}}
+        className="w-full flex-1 rounded-r-xl shadow-red-500 shadow-2xl" />
+        <motion.div
+        initial={{x:-100, opacity:0, scale:0}}
+        animate={{x:0, opacity:1, scale:1}}
+        transition={{duration:0.5}}
+        className="w-[80%] h-[35%] rounded-r-lg shadow-orange-500 shadow-2xl" />
+        <motion.div 
+        initial={{x:-100, opacity:0, scale:0}}
+        animate={{x:0, opacity:1, scale:1}}
+        transition={{duration:1}}
+        className="w-[70%] h-[25%] rounded-r-md shadow-yellow-500 shadow-2xl" />
      </div>
     </>
   )
