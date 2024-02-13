@@ -1,87 +1,149 @@
 # User API Spec
+
 ## Register User API
-    endpoint: POST /api/auth
-    Request Body :
-        {
-            "username":"knixxen",
-            "password":"knixxen123"
-            "name":"knixxen Enggine"
-        }
 
-    Response Body Success :
-        {
-            "data":{
-                "username":"knixxen",
-                "name":"knixxen Enggine"
-            }
-        }
-    Response Body Errors :
-        {
-            "errors":"username already registered"
-        }
+Endpoint :  POST /api/users 
+
+Request Body :
+
+```json
+{
+  "username" : "pzn",
+  "password" : "rahasia",
+  "name" : "Programmer Zaman Now"
+}
+```
+
+Response Body Success :
+
+```json
+{
+  "data" : {
+    "username" : "pzn",
+    "name" : "Programmer Zaman Now"
+  }
+}
+```
+
+Response Body Error : 
+
+```json
+{
+  "errors" : "Username already registered"
+}
+```
+
+## Login User API
+
+Endpoint : POST /api/users/login
+
+Request Body :
+
+```json
+{
+  "username" : "pzn",
+  "password" : "rahasia"
+}
+```
+
+Response Body Success : 
+
+```json
+{
+  "data" : {
+    "token" : "unique-token"
+  }
+}
+```
+
+Response Body Error :
+
+```json
+{
+  "errors" : "Username or password wrong"
+}
+```
+
 ## Update User API
-    endpoint: POST /api/users/login
 
-    Request Body:
-        {
-            "username":"knixxen",
-            "password":"knixxen123"
-        }
-    Response Body Success:
-        {
-            "data":{
-                "token":"unique-token"
-            }
-        }
-    Response Body Erros :
-        {
-            "errors":"Username or password wrong"
-        }
-## update User API
-    endpoint : PACTH /api/users/current
-    Heders :
-        Authorization:token
+Endpoint : PATCH /api/users/current
 
-    Request Body:
-        {
-            "username":"knixxen",
-            "password":"knixxen123"
-        }
-    Response Body Success:
-        {
-            "data":{
-                "username":"knixxen",
-                "password":"knixxen123"
-            }
-        }
-    Response Body Errors:
-        {
-            "errors":"Name Length max 100"
-        }
+Headers :
+- Authorization : token 
+
+Request Body :
+
+```json
+{
+  "name" : "Programmer Zaman Now Lagi", // optional
+  "password" : "new password" // optional
+}
+```
+
+Response Body Success : 
+
+```json
+{
+  "data" : {
+    "username" : "pzn",
+    "name" : "Programmer Zaman Now Lagi"
+  }
+}
+```
+
+Response Body Error : 
+
+```json
+{
+  "errors" : "Name length max 100"
+}
+```
+
 ## Get User API
-    endpoint:GET /api/users/current
-        Heders :
-            Authorization:token
-    Response Body Success:
-        {
-            "data":{
-                "username":"knixxen",
-                "name":"knixxen Enggine"
-            }
-        }
-    Response Body Errors:
-        {
-            "errors":"not authorizated"
-        } 
+
+Endpoint : GET /api/users/current
+
+Headers :
+- Authorization : token
+
+Response Body Success:
+
+```json
+{
+  "data" : {
+    "username" : "pzn",
+    "name" : "Programmer Zaman Now"
+  }
+}
+```
+
+Response Body Error : 
+
+```json
+{
+  "errors" : "Unauthorized"
+}
+```
+
 ## Logout User API
-    endpoint: DELETE /api/users/logout
-        Heders :
-            Authorization:token
-    Response Body Success :
-        {
-            "data":"ok"   
-        } 
-    Response Body Errors :
-        {
-            "errors":"not authorizated"
-        } 
+
+Endpoint : DELETE /api/users/logout
+
+Headers :
+- Authorization : token
+
+Response Body Success : 
+
+```json
+{
+  "data" : "OK"
+}
+```
+
+Response Body Error : 
+
+```json
+{
+  "errors" : "Unauthorized"
+}
+```
